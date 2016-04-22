@@ -35,25 +35,30 @@ namespace PiGeChang
 
         public Message WaitForWndProc(Func<Message, bool> predicate)
         {
+            return WaitForWndProc<Object>(predicate, (msg) => null).Item1;
+        }
+
+        public Tuple<Message, TObject> WaitForWndProc<TObject>(Func<Message, bool> predicate, Func<Message, TObject> generator)
+        {
             using (AutoResetEvent wait = new AutoResetEvent(false))
             {
                 Message msg = new Message();
+                TObject obj = default(TObject);
                 WndProcReceiving += (m) =>
                 {
-                    msg = m;
-                    wait.Set();
+                    if (predicate(m))
+                    {
+                        msg = m;
+                        obj = generator(msg);
+                        wait.Set();
+                    }
                 };
 
                 this.Show();
-
-                do
-                {
-                    wait.WaitOne();
-                }
-                while (!predicate(msg));
+                wait.WaitOne();
 
                 WndProcReceiving = null;
-                return msg;
+                return new Tuple<Message, TObject>(msg, obj);
             }
         }
 
@@ -63,6 +68,15 @@ namespace PiGeChang
             {
                 form.Show();
                 return form.WaitForWndProc(predicate);
+            }
+        }
+
+        public static Tuple<Message, TObject> WaitForSingleWndProc<TObject>(Func<Message, bool> predicate, Func<Message, TObject> generator)
+        {
+            using (WndProcReceiverForm form = new WndProcReceiverForm())
+            {
+                form.Show();
+                return form.WaitForWndProc(predicate, generator);
             }
         }
     }
