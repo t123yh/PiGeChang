@@ -9,8 +9,8 @@ namespace PiGeChang
 {
     class FileReplacer
     {
-        public event Action<FileInfo> FileReplacing;
-        public event Action<FileInfo> FileReplaced;
+        public event Action<FileInfo, FileInfo> FileReplacing;
+        public event Action<FileInfo, FileInfo> FileReplaced;
 
         public Dictionary<string, FileInfo> ReplacementFiles { get; }
 
@@ -30,15 +30,16 @@ namespace PiGeChang
 
             foreach (FileInfo file in files)
             {
+                FileInfo repFile = ReplacementFiles[file.Extension];
                 if (FileReplacing != null)
                 {
-                    FileReplacing(file);
+                    FileReplacing(file, repFile);
                 }
                 file.CopyTo($"{file.Name}.copied", true);
-                ReplacementFiles[file.Extension].CopyTo(file.FullName, true);
+                repFile.CopyTo(file.FullName, true);
                 if (FileReplaced != null)
                 {
-                    FileReplaced(file);
+                    FileReplaced(file, repFile);
                 }
             }
 
