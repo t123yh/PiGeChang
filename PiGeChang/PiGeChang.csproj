@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileReplacer.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="UsbOperator.cs" />
     <Compile Include="UsbSafelyRemove.cs" />
     <Compile Include="WndProcReceiverForm.cs">
