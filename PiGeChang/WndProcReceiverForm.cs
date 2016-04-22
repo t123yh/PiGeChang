@@ -58,11 +58,16 @@ namespace PiGeChang
                     msg = m;
                     wait.Set();
                 };
+
+                this.Show();
+
                 do
                 {
                     wait.WaitOne();
                 }
                 while (!predicate(msg));
+
+                WndProcReceiving = null;
                 return msg;
             }
         }
@@ -79,6 +84,7 @@ namespace PiGeChang
         {
             using (WndProcReceiverForm form = new WndProcReceiverForm())
             {
+                form.Show();
                 return form.WaitForWndProc(predicate);
             }
         }
