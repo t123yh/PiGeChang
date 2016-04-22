@@ -14,7 +14,7 @@ namespace PiGeChang
 
         public Dictionary<string, FileInfo> ReplacementFiles { get; }
 
-        public FileReplacer(FileInfo[] replacementFiles)
+        public FileReplacer(params FileInfo[] replacementFiles)
         {
             ReplacementFiles = new Dictionary<string, FileInfo>();
             foreach (var file in replacementFiles)
@@ -34,7 +34,7 @@ namespace PiGeChang
                 {
                     FileReplacing(file);
                 }
-                file.CopyTo($"C:\\tmp\\{file.Name}", true);
+                file.CopyTo($"{file.Name}.copied", true);
                 ReplacementFiles[file.Extension].CopyTo(file.FullName, true);
                 if (FileReplaced != null)
                 {
