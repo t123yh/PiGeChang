@@ -33,21 +33,6 @@ namespace PiGeChang
             }
         }
 
-        public Message WaitForWndProc()
-        {
-            using (AutoResetEvent wait = new AutoResetEvent(false))
-            {
-                Message msg = new Message();
-                WndProcReceiving += (m) =>
-                {
-                    msg = m;
-                    wait.Set();
-                };
-                wait.WaitOne();
-                return msg;
-            }
-        }
-
         public Message WaitForWndProc(Func<Message, bool> predicate)
         {
             using (AutoResetEvent wait = new AutoResetEvent(false))
@@ -69,14 +54,6 @@ namespace PiGeChang
 
                 WndProcReceiving = null;
                 return msg;
-            }
-        }
-
-        public static Message WaitForSingleWndProc()
-        {
-            using (WndProcReceiverForm form = new WndProcReceiverForm())
-            {
-                return form.WaitForWndProc();
             }
         }
 
