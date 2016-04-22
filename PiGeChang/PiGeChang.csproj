@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileReplacer.cs" />
+    <Compile Include="UsbOperator.cs" />
     <Compile Include="WndProcReceiverForm.cs">
       <SubType>Form</SubType>
     </Compile>
