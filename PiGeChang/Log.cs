@@ -62,7 +62,7 @@ namespace PiGeChang
                         break;
                     case LogType.Information:
                         typeString = "[*]";
-                        color = ConsoleColor.DarkGreen;
+                        color = ConsoleColor.DarkBlue;
                         break;
                     case LogType.Debug:
                         typeString = "[*]";
