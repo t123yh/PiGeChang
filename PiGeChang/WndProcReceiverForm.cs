@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -20,7 +21,7 @@ namespace PiGeChang
             this.Activated += (sender, e) => this.Hide();
         }
 
-        public event Action<Message> WndProcReceiving;
+        private event Action<Message> WndProcReceiving;
 
         protected override void WndProc(ref Message m)
         {
@@ -29,6 +30,56 @@ namespace PiGeChang
             if (WndProcReceiving != null)
             {
                 WndProcReceiving(m);
+            }
+        }
+
+        public Message WaitForWndProc()
+        {
+            using (AutoResetEvent wait = new AutoResetEvent(false))
+            {
+                Message msg = new Message();
+                WndProcReceiving += (m) =>
+                {
+                    msg = m;
+                    wait.Set();
+                };
+                wait.WaitOne();
+                return msg;
+            }
+        }
+
+        public Message WaitForWndProc(Func<Message, bool> predicate)
+        {
+            using (AutoResetEvent wait = new AutoResetEvent(false))
+            {
+                Message msg = new Message();
+                WndProcReceiving += (m) =>
+                {
+                    msg = m;
+                    wait.Set();
+                };
+                do
+                {
+                    wait.WaitOne();
+                }
+                while (!predicate(msg));
+                return msg;
+            }
+        }
+
+        public static Message WaitForSingleWndProc()
+        {
+            using (WndProcReceiverForm form = new WndProcReceiverForm())
+            {
+                return form.WaitForWndProc();
+            }
+        }
+
+        public static Message WaitForSingleWndProc(Func<Message, bool> predicate)
+        {
+            using (WndProcReceiverForm form = new WndProcReceiverForm())
+            {
+                return form.WaitForWndProc(predicate);
             }
         }
     }
