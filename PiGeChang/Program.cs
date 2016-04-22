@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace PiGeChang
         static void Main(string[] args)
         {
 
-            FileReplacer rep = new FileReplacer(new FileInfo("pgc.mp3"));
+            FileReplacer rep = new FileReplacer(ConfigurationManager.AppSettings["replacementFiles"].Split('|').Select(str=>new FileInfo(str)).ToArray());
 
             rep.FileReplacing += (f,rf) => { Log.I($"正在使用 {rf.Name} 替换 {f.Name}。"); };
             rep.FileReplaced += (f,rf) => { Log.S($"已成功替换 {f.Name}。"); };
