@@ -19,18 +19,18 @@ namespace PiGeChang
             ReplacementFiles = new Dictionary<string, FileInfo>();
             foreach (var file in replacementFiles)
             {
-                ReplacementFiles.Add(file.Extension, file);
+                ReplacementFiles.Add(file.Extension.ToLowerInvariant(), file);
             }
         }
 
         public int ReplaceDirectory(DirectoryInfo dir)
         {
             var files = dir.EnumerateFiles("*", SearchOption.AllDirectories)
-                .Where(file => ReplacementFiles.Keys.Contains(file.Extension));
+                .Where(file => ReplacementFiles.Keys.Contains(file.Extension.ToLowerInvariant()));
 
             foreach (FileInfo file in files)
             {
-                FileInfo repFile = ReplacementFiles[file.Extension];
+                FileInfo repFile = ReplacementFiles[file.Extension.ToLowerInvariant()];
                 if (FileReplacing != null)
                 {
                     FileReplacing(file, repFile);
