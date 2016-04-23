@@ -16,7 +16,7 @@ namespace PiGeChang
 
             FileReplacer rep = new FileReplacer(ConfigurationManager.AppSettings["replacementFiles"].Split('|').Select(str=>new FileInfo(str)).ToArray());
 
-            rep.FileReplacing += (f,rf) => { Log.I($"正在使用 {rf.Name} 替换 {f.Name}。"); };
+            rep.FileReplacing += (f,rf) => { Log.I($"正在使用 {rf.Name} 替换 {f.FullName}。"); };
             rep.FileReplaced += (f,rf) => { Log.S($"已成功替换 {f.Name}。"); };
             
             while(true)
